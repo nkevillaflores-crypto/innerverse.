@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planet Valea - Inner Values Explorer</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Quicksand:wght@300;400;700&display=swap');
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #030318;
+            color: #e0e0ff;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(60, 20, 120, 0.2) 0%, transparent 30%),
+                radial-gradient(circle at 80% 70%, rgba(20, 60, 120, 0.2) 0%, transparent 30%);
+        }
+        
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            text-align: left;
+            margin-bottom: 20px;
+            padding-top: 10px;
+        }
+        
+        .title-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .valea-logo {
+            color: #ffcc00;
+            font-size: 3rem;
+            animation: twinkle 3s infinite alternate;
+            text-shadow: 0 0 20px rgba(255, 204, 0, 0.5);
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.7; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1.1); }
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            margin: 0;
+            background: linear-gradient(to right, #ffcc00, #ff9900);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(255, 204, 0, 0.3);
+            line-height: 1;
+        }
+        
+        .tagline {
+            font-size: 1.1rem;
+            color: #aaaadd;
+            margin-top: 8px;
+            font-weight: 300;
+        }
+        
+        .main-content {
+            display: flex;
+            flex: 1;
+            gap: 20px;
+        }
+        
+        .left-panel {
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .right-panel {
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .cosmic-panel {
+            background: rgba(15, 15, 40, 0.6);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(100, 100, 200, 0.2);
+            box-shadow: 0 0 30px rgba(60, 20, 120, 0.2);
+            backdrop-filter: blur(10px);
+            height: 100%;
+        }
+        
+        .cosmic-panel h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #ffcc00;
+            margin-top: 0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.4rem;
+        }
+        
+        .cosmic-panel h2::before {
+            content: '★';
+            font-size: 1.2em;
+        }
+        
+        .instructions ol {
+            padding-left: 25px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 5px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #aaaadd;
+            font-weight: 700;
+        }
+        
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            background: rgba(20, 20, 50, 0.4);
+            border: 1px solid rgba(100, 100, 200, 0.3);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 1rem;
+            font-family: 'Quicksand', sans-serif;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            accent-color: #ffcc00;
+            height: 6px;
+        }
+        
+        .importance-display {
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+        }
+        
+        .importance-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ffcc00;
+            margin-right: 10px;
+            width: 25px;
+            text-align: center;
+        }
+        
+        .importance-stars {
+            color: #ffcc00;
+            letter-spacing: 2px;
+        }
+        
+        button {
+            background: linear-gradient(to right, #ffcc00, #ff6600);
+            color: #030318;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.3);
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.5);
+        }
+        
+        .constellation {
+            position: relative;
+            height: 400px;
+            background: rgba(5, 5, 20, 0.7);
+            border-radius: 15px;
+            overflow: hidden;
+            flex: 1;
+        }
+        
+        .constellation::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white 1px, transparent 1px),
+                radial-gradient(white 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: 0 0, 25px 25px;
+            opacity: 0.05;
+        }
+        
+        .planet {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffcc00 0%, #ff9900 50%, #ff6600 100%);
+            box-shadow: 0 0 40px rgba(255, 204, 0, 0.6);
+        }
+        
+        .planet::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.3) 45%, rgba(255, 255, 255, 0.3) 55%, transparent 60%);
+        }
+        
+        .planet::before {
+            content: '';
+            position: absolute;
+            width: 140%;
+            height: 20px;
+            background: rgba(255, 204, 0, 0.2);
+            border-radius: 50%;
+            top: 50%;
+            left: -20%;
+            transform: rotate(-15deg);
+        }
+        
+        .constellation-star {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            text-shadow: 0 0 10px currentColor;
+            z-index: 2;
+        }
+        
+        .values-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        
+        .values-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .values-list::-webkit-scrollbar-track {
+            background: rgba(20, 20, 50, 0.2);
+            border-radius: 10px;
+        }
+        
+        .values-list::-webkit-scrollbar-thumb {
+            background: rgba(100, 100, 200, 0.4);
+            border-radius: 10px;
+        }
+        
+        .value-card {
+            background: rgba(20, 20, 50, 0.4);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid rgba(100, 100, 200, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .value-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(100, 100, 200, 0.2);
+        }
+        
+        .value-name {
+            color: #ffcc00;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .value-importance {
+            color: #aaaadd;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .value-reflection {
+            color: #e0e0ff;
+            font-style: italic;
+            line-height: 1.4;
+            font-size: 0.9rem;
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 40px 0;
+            color: #aaaadd;
+            font-size: 1.1rem;
+        }
+        
+        .console {
+            background: rgba(5, 5, 20, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            color: #ffcc00;
+            border: 1px solid rgba(255, 204, 0, 0.2);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .left-panel, .right-panel {
+                width: 100%;
+            }
+            
+            .constellation {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    
+    <div class="container">
+        <header>
+            <div class="title-container">
+                <a href="Nicole.html"><div class="valea-logo">⭐</div></a>
+                <div>
+                    <h1>PLANET VALEA</h1>
+                    <div class="tagline">Explore your inner universe and discover your guiding stars</div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="cosmic-panel instructions">
+                    <h2>Cosmic Mission</h2>
+                    <p>Welcome to Planet Valea, a sacred place in the Innerverse where your personal values take the form of stars.</p>
+                    <ol>
+                        <li>Enter a personal value that guides your life</li>
+                        <li>Rate its importance in your cosmic journey</li>
+                        <li>Share how you've embodied this value recently</li>
+                        <li>Add 3-5 values to complete your constellation</li>
+                    </ol>
+                </div>
+                
+                <div class="cosmic-panel">
+                    <h2>Create a Value Star</h2>
+                    
+                    <div class="form-group">
+                        <label for="value-name">Value Name:</label>
+                        <input type="text" id="value-name" placeholder="e.g., Kindness, Honesty...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="value-importance">Cosmic Significance (1-10):</label>
+                        <input type="range" id="value-importance" min="1" max="10" value="5">
+                        <div class="importance-display">
+                            <div class="importance-value" id="importance-display">5</div>
+                            <div class="importance-stars" id="importance-stars">★★★★★☆☆☆☆☆</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="value-reflection">How have you embodied this value?</label>
+                        <textarea id="value-reflection" rows="3" placeholder="Share a recent experience..."></textarea>
+                    </div>
+                    
+                    <button id="add-value">Add to Constellation</button>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="cosmic-panel">
+                    <h2>Your Cosmic Constellation</h2>
+                    
+                    <div class="constellation">
+                        <div class="planet"></div>
+                        <!-- Stars will be added here -->
+                        
+                        <div id="empty-message" class="empty-message">
+                            Your constellation awaits. Add your first value to illuminate the cosmos.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cosmic-panel">
+                    <h2>Your Value Stars</h2>
+                    
+                    <div id="values-list" class="values-list">
+                        <!-- Value cards will be added here -->
+                    </div>
+                    
+                    <div id="console-output" class="console hidden">
+                        <div id="console-text"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create background stars
+        function createBackgroundStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 150;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                // Random size between 1-3px
+                const size = Math.random() * 2 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                
+                // Random position
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                
+                // Random opacity
+                const opacity = Math.random() * 0.7 + 0.3;
+                star.style.opacity = opacity;
+                
+                // Random twinkle animation
+                if (Math.random() > 0.7) {
+                    const duration = Math.random() * 3 + 2;
+                    star.style.animation = `twinkle ${duration}s infinite alternate`;
+                }
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // Initialize variables
+        let values = [];
+        const maxValues = 5;
+        
+        // DOM elements
+        const valueNameInput = document.getElementById('value-name');
+        const valueImportanceInput = document.getElementById('value-importance');
+        const importanceDisplay = document.getElementById('importance-display');
+        const importanceStars = document.getElementById('importance-stars');
+        const valueReflectionInput = document.getElementById('value-reflection');
+        const addValueButton = document.getElementById('add-value');
+        const valuesList = document.getElementById('values-list');
+        const constellation = document.querySelector('.constellation');
+        const emptyMessage = document.getElementById('empty-message');
+        const consoleOutput = document.getElementById('console-output');
+        const consoleText = document.getElementById('console-text');
+        
+        // Create background stars
+        createBackgroundStars();
+        
+        // Update importance display when slider changes
+        valueImportanceInput.addEventListener('input', () => {
+            const value = valueImportanceInput.value;
+            importanceDisplay.textContent = value;
+            importanceStars.textContent = '★'.repeat(value) + '☆'.repeat(10 - value);
+        });
+        
+        // Add value to constellation
+        addValueButton.addEventListener('click', () => {
+            const name = valueNameInput.value.trim();
+            const importance = parseInt(valueImportanceInput.value);
+            const reflection = valueReflectionInput.value.trim();
+            
+            if (!name) {
+                alert('Please enter a value name');
+                return;
+            }
+            
+            if (!reflection) {
+                alert('Please share a reflection about this value');
+                return;
+            }
+            
+            if (values.length >= maxValues) {
+                alert(`You can only add up to ${maxValues} values to your constellation`);
+                return;
+            }
+            
+            // Add to values array
+            const value = { name, importance, reflection };
+            values.push(value);
+            
+            // Create star in constellation
+            createStar(value);
+            
+            // Create value card
+            createValueCard(value);
+            
+            // Update console output
+            updateConsoleOutput();
+            
+            // Clear inputs
+            valueNameInput.value = '';
+            valueImportanceInput.value = '5';
+            importanceDisplay.textContent = '5';
+            importanceStars.textContent = '★★★★★☆☆☆☆☆';
+            valueReflectionInput.value = '';
+            
+            // Show console output and hide empty message
+            if (values.length > 0) {
+                emptyMessage.classList.add('hidden');
+                consoleOutput.classList.remove('hidden');
+            }
+        });
+        
+        // Create a star in the constellation
+        function createStar(value) {
+            const star = document.createElement('div');
+            star.className = 'constellation-star';
+            
+            // Size based on importance
+            const size = 18 + (value.importance * 3);
+            star.style.fontSize = `${size}px`;
+            
+            // Star symbol
+            star.textContent = '★';
+            
+            // Random position (avoiding planet at bottom center)
+            let x, y;
+            do {
+                x = Math.random() * 80 + 10; // 10% to 90% of width
+                y = Math.random() * 70 + 10; // 10% to 80% of height
+            } while (x > 40 && x < 60 && y > 60); // Avoid planet area
+            
+            star.style.left = `${x}%`;
+            star.style.top = `${y}%`;
+            
+            // Color based on importance
+            const colors = [
+                '#ffcc00', // yellow
+                '#ff9966', // orange
+                '#ff6699', // pink
+                '#99ccff', // blue
+                '#99ff99'  // green
+            ];
+            const colorIndex = values.length % colors.length;
+            star.style.color = colors[colorIndex];
+            
+            // Add glow effect based on importance
+            const glowSize = value.importance * 2;
+            star.style.textShadow = `0 0 ${glowSize}px ${colors[colorIndex]}`;
+            
+            // Add tooltip with value name
+            star.title = value.name;
+            
+            // Add label below star
+            const label = document.createElement('div');
+            label.style.fontSize = '12px';
+            label.style.position = 'absolute';
+            label.style.width = '80px';
+            label.style.left = '50%';
+            label.style.transform = 'translateX(-50%)';
+            label.style.top = '100%';
+            label.style.textShadow = '0 0 3px rgba(0,0,0,0.8)';
+            label.textContent = value.name;
+            star.appendChild(label);
+            
+            // Add connecting lines if there are other stars
+            if (values.length > 1) {
+                const previousStars = document.querySelectorAll('.constellation-star');
+                const previousStar = previousStars[previousStars.length - 1];
+                
+                // Get positions
+                const prevX = parseFloat(previousStar.style.left);
+                const prevY = parseFloat(previousStar.style.top);
+                
+                // Create line
+                const line = document.createElement('div');
+                line.style.position = 'absolute';
+                line.style.height = '1px';
+                line.style.background = `linear-gradient(to right, ${colors[(values.length - 1) % colors.length]}, ${colors[colorIndex]})`;
+                line.style.opacity = '0.6';
+                
+                // Calculate line position and rotation
+                const length = Math.sqrt(Math.pow(x - prevX, 2) + Math.pow(y - prevY, 2));
+                const angle = Math.atan2(y - prevY, x - prevX) * 180 / Math.PI;
+                
+                line.style.width = `${length}%`;
+                line.style.left = `${prevX}%`;
+                line.style.top = `${prevY}%`;
+                line.style.transformOrigin = '0 0';
+                line.style.transform = `rotate(${angle}deg)`;
+                
+                constellation.appendChild(line);
+            }
+            
+            constellation.appendChild(star);
+        }
+        
+        // Create a value card
+        function createValueCard(value) {
+            const card = document.createElement('div');
+            card.className = 'value-card';
+            
+            const nameElement = document.createElement('div');
+            nameElement.className = 'value-name';
+            nameElement.textContent = value.name;
+            
+            const importanceElement = document.createElement('div');
+            importanceElement.className = 'value-importance';
+            importanceElement.textContent = `Significance: ${'★'.repeat(value.importance)}${'☆'.repeat(10 - value.importance)}`;
+            
+            const reflectionElement = document.createElement('div');
+            reflectionElement.className = 'value-reflection';
+            reflectionElement.textContent = value.reflection;
+            
+            card.appendChild(nameElement);
+            card.appendChild(importanceElement);
+            card.appendChild(reflectionElement);
+            
+            valuesList.appendChild(card);
+        }
+        
+        // Update console output
+        function updateConsoleOutput() {
+            let output = '★ PLANET VALEA: CONSTELLATION OF VALUES ★\n\n';
+            
+            values.forEach((value, index) => {
+                output += `STAR ${index + 1}: "${value.name}"\n`;
+                output += `COSMIC SIGNIFICANCE: ${value.importance}/10\n`;
+                output += `EMBODIMENT: "${value.reflection}"\n\n`;
+            });
+            
+            if (values.length === maxValues) {
+                output += "★ CONSTELLATION COMPLETE! ★\n";
+                output += "Your values constellation now illuminates Planet Valea.\n";
+                output += "May these stars guide your journey through the Innerverse.";
+            } else {
+                output += `★ ${maxValues - values.length} MORE STARS NEEDED ★\n`;
+                output += "Continue adding values to complete your constellation.";
+            }
+            
+            consoleText.textContent = output;
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96e0288723139fd7',t:'MTc1NTAwMzY1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

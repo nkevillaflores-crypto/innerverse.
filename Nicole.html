@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InnerVerse</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Exo+2:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-space: #0a0a12;
+            --cosmic-red: #e63946;
+            --red-glow: #ff5c6c;
+            --star-white: #f8f9fa;
+            --nebula-pink: #ff758f;
+            --dark-matter: #1a1a2e;
+            --space-blue: #1d3557;
+        }
+        
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background-color: var(--deep-space);
+            color: var(--star-white);
+            overflow-x: hidden;
+        }
+        
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+        }
+        
+        .cosmic-card {
+            background-color: rgba(26, 26, 46, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .cosmic-card:hover {
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+        
+        .cosmic-button {
+            background: linear-gradient(135deg, var(--cosmic-red), #9d0208);
+            border: none;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cosmic-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(230, 57, 70, 0.7);
+        }
+        
+        .cosmic-button:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+        }
+        
+        .cosmic-button:hover:before {
+            left: 100%;
+        }
+        
+        .planet {
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .planet:hover {
+            transform: scale(1.1);
+        }
+
+        .login{
+             display: flex;
+             flex-direction: row;
+             justify-content: flex-end;
+             align-items: center;
+             padding: -90px 30px;
+             width: 100%;
+        }
+
+        .login-button{
+            margin-left: auto;
+        }
+        
+        .planet-icon {
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(230, 57, 70, 0.5);
+        }
+        
+        .planet.active .planet-icon {
+            box-shadow: 0 0 25px rgba(230, 57, 70, 0.8);
+        }
+        
+        .glow-text {
+            text-shadow: 0 0 10px rgba(230, 57, 70, 0.7);
+        }
+        
+        .prompt-container {
+            height: 180px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--cosmic-red) var(--dark-matter);
+        }
+        
+        .prompt-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .prompt-container::-webkit-scrollbar-track {
+            background: var(--dark-matter);
+        }
+        
+        .prompt-container::-webkit-scrollbar-thumb {
+            background-color: var(--cosmic-red);
+            border-radius: 6px;
+        }
+        
+        .cosmic-input {
+            background-color: rgba(26, 26, 46, 0.6);
+            border: 1px solid var(--cosmic-red);
+            color: var(--star-white);
+            transition: all 0.3s ease;
+        }
+        
+        .cosmic-input:focus {
+            border-color: var(--red-glow);
+            box-shadow: 0 0 10px rgba(230, 57, 70, 0.5);
+            outline: none;
+        }
+        
+        .impact-btn {
+            transition: all 0.3s ease;
+            background-color: rgba(26, 26, 46, 0.6);
+            border: 1px solid rgba(230, 57, 70, 0.3);
+        }
+        
+        .impact-btn:hover {
+            background-color: rgba(230, 57, 70, 0.2);
+            border-color: var(--cosmic-red);
+        }
+        
+        .impact-btn.selected {
+            background-color: rgba(230, 57, 70, 0.3);
+            border-color: var(--cosmic-red);
+            box-shadow: 0 0 10px rgba(230, 57, 70, 0.5);
+        }
+        
+        .progress-track {
+            height: 6px;
+            background-color: rgba(26, 26, 46, 0.6);
+            border-radius: 3px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cosmic-red), var(--nebula-pink));
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(26, 26, 46, 0.9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Orbitron', sans-serif;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            margin-bottom: 10px;
+            z-index: 10;
+        }
+        
+        .planet:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <!-- Starfield Background -->
+    <div class="starfield" id="starfield"></div>
+    
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Login Button -->
+        <div class="login">
+            <button type="button" class="cosmic-button px-6 py-2 rounded-lg">
+                <a href="login.html/Login interface.html"> Log In
+            </button></a>
+        </div>
+        
+        <!-- Header -->
+        <div class="text-center mb-2">
+            <h1 class="orbitron text-6xl font-bold text-white mb-8" style="text-shadow: 0 0 30px rgba(255, 255, 255, 0.6), 0 0 60px rgba(255, 255, 255, 0.3);">InnerVerse</h1>
+            <p class="text-gray-100 text-2xl mb-4 font-light" style="text-shadow: 0 0 20px rgba(255, 255, 255, 0.4), 0 0 40px rgba(255, 255, 255, 0.2);">Welcome To Your InnerVerse</p>
+            <p class="text-gray-300 text-lg max-w-3xl mx-auto leading-relaxed mb-4" style="text-shadow: 0 0 15px rgba(255, 255, 255, 0.3), 0 0 30px rgba(255, 255, 255, 0.1);">Explore the cosmos of your mind through interactive planets. Each represents a different aspect of your inner world. Click on a planet to begin your journey of self-discovery.</p>
+        </div>
+        
+        <!-- Main Interface -->
+        <div class="flex justify-center items-end space-x-32 py-2">
+            <div class="planet float" data-category="Cognitia">
+                <div class="tooltip">Cognitia - Realm of Thoughts</div>
+                <div class="planet-icon w-48 h-48 mx-auto bg-gradient-to-br from-purple-600 to-purple-900">
+                    <a href="cognitia.html"><span class="text-8xl">🧠</span></a>
+                </div>
+                <p class="text-center mt-6 orbitron text-2xl">Cognitia</p>
+            </div>
+            
+            <div class="planet float" data-category="Emocean" style="margin-top: 80px;">
+                <div class="tooltip">Emocean - Ocean of Emotions</div>
+                <div class="planet-icon w-56 h-56 mx-auto bg-gradient-to-br from-blue-600 to-blue-900">
+                    <a href="emocean.html"><span class="text-9xl">🌊</span></a>
+                </div>
+                <p class="text-center mt-6 orbitron text-2xl">Emocean</p>
+            </div>
+            
+            <div class="planet float" data-category="Valea">
+                <div class="tooltip">Valea - Valley of Values</div>
+                <div class="planet-icon w-48 h-48 mx-auto bg-gradient-to-br from-yellow-500 to-yellow-700">
+                   <a href="valea.html"><span class="text-8xl">⭐</span></a>
+                </div>
+                <p class="text-center mt-6 orbitron text-2xl">Valea</p>
+            </div>
+        </div>
+        
+
+    </div>
+
+    <script>
+        // DOM elements
+        const elements = {
+            starfield: document.getElementById("starfield"),
+            realmCards: document.querySelectorAll(".realm-card")
+        };
+
+        // Create starfield background
+        function createStarfield() {
+            const stars = 200;
+            
+            for (let i = 0; i < stars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                // Random position
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                
+                // Random size
+                const size = Math.random() * 3;
+                
+                // Random opacity
+                const opacity = Math.random() * 0.8 + 0.2;
+                
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.opacity = opacity;
+                
+                // Add subtle animation
+                star.style.animation = `twinkle ${Math.random() * 5 + 3}s infinite ease-in-out`;
+                
+                elements.starfield.appendChild(star);
+            }
+        }
+
+        // Add twinkle animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes twinkle {
+                0%, 100% { opacity: 0.2; }
+                50% { opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize the application
+        function init() {
+            createStarfield();
+            attachEventListeners();
+        }
+
+        // Attach event listeners
+        function attachEventListeners() {
+            // Realm card clicks
+            elements.realmCards.forEach(card => {
+                card.addEventListener("click", () => {
+                    const realmName = card.querySelector('h2').textContent;
+                    alert(`Welcome to ${realmName}! This realm is coming soon...`);
+                });
+            });
+        }
+
+        // Initialize the application
+        document.addEventListener("DOMContentLoaded", init);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96e0196621a82652',t:'MTc1NTAwMzAzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

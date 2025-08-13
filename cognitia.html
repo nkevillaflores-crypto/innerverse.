@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognitia's Thought Mapper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .float-animation { animation: float 3s ease-in-out infinite; }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        .twinkle { animation: twinkle 2s infinite; }
+        
+        .thought-node {
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        .thought-node:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(147, 51, 234, 0.5);
+        }
+        
+        .space-bg {
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .space-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 160px 30px, #fff, transparent);
+            background-repeat: repeat;
+            background-size: 200px 100px;
+            animation: twinkle 4s infinite;
+        }
+        
+        .brain-glow {
+            filter: drop-shadow(0 0 20px rgba(147, 51, 234, 0.7));
+        }
+        
+        .neural-connection {
+            background: linear-gradient(45deg, transparent 30%, rgba(147, 51, 234, 0.3) 50%, transparent 70%);
+            animation: float 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="space-bg min-h-screen text-white">
+    <div class="flex min-h-screen">
+        <!-- Left Sidebar Header -->
+        <div class="w-72 bg-black/30 backdrop-blur-xl border-r border-purple-500/30 p-6 flex flex-col">
+            <div class="text-center mb-6">
+                <div class="text-5xl mb-3 brain-glow float-animation"><a href="Nicole.html">🧠</div></a>
+                <h1 class="text-2xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    Cognitia's<br>Thought Mapper
+                </h1>
+                <p class="text-purple-200 text-xs">Navigate the neural networks of your mind</p>
+            </div>
+            
+            <!-- Stats -->
+            <div class="space-y-3 mb-6">
+                <div class="bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-lg rounded-lg p-3 border border-purple-400/30">
+                    <div class="flex items-center justify-between">
+                        <span class="text-purple-200 text-sm">Neural Crystals</span>
+                        <span class="text-lg font-bold text-yellow-400">💎 <span id="crystals">0</span></span>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-r from-blue-600/20 to-cyan-600/20 backdrop-blur-lg rounded-lg p-3 border border-blue-400/30">
+                    <div class="flex items-center justify-between">
+                        <span class="text-blue-200 text-sm">Thoughts Mapped</span>
+                        <span class="text-lg font-bold text-cyan-400">🗺️ <span id="thoughtCount">0</span></span>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-r from-green-600/20 to-emerald-600/20 backdrop-blur-lg rounded-lg p-3 border border-green-400/30">
+                    <div class="flex items-center justify-between">
+                        <span class="text-green-200 text-sm">Reframes Created</span>
+                        <span class="text-lg font-bold text-emerald-400">✨ <span id="reframeCount">0</span></span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Space Brain Visualization -->
+            <div class="flex-1 relative">
+                <div class="absolute inset-0 bg-gradient-to-b from-purple-900/20 to-transparent rounded-xl">
+                    <div class="p-4 text-center">
+                        <div class="text-4xl mb-2">🌌</div>
+                        <p class="text-xs text-purple-300">Your cognitive universe expands with each mapped thought</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content Area -->
+        <div class="flex-1 p-6 overflow-y-auto">
+            <!-- Thought Logger -->
+            <div class="mb-6">
+                <div class="bg-black/20 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30 neural-connection">
+                    <h2 class="text-2xl font-bold mb-4 text-center bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        🚀 Neural Input Terminal
+                    </h2>
+                    <div class="space-y-4">
+                        <input type="text" id="thoughtInput" placeholder="Transmit your thought into the neural network..." 
+                               class="w-full p-3 rounded-xl bg-black/30 border border-purple-400/50 text-white placeholder-purple-300/70 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent backdrop-blur-lg">
+                        
+                        <div class="grid grid-cols-1 gap-4">
+                            <select id="strengthSelect" class="p-3 rounded-xl bg-black/30 border border-purple-400/50 text-white focus:outline-none focus:ring-2 focus:ring-purple-400 backdrop-blur-lg">
+                                <option value="">Select Neural Signal Strength</option>
+                                <option value="weak">🌙 Weak Signal (1-3)</option>
+                                <option value="medium">⭐ Medium Signal (4-7)</option>
+                                <option value="strong">☀️ Strong Signal (8-10)</option>
+                            </select>
+                        </div>
+                        
+                        <button onclick="addThought()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 p-3 rounded-xl font-bold transition-all duration-300 transform hover:scale-105">
+                            🌟 Launch Into Neural Space
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cognitive Pattern Map -->
+            <div class="mb-6">
+                <div class="bg-black/20 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
+                    <h2 class="text-2xl font-bold mb-4 text-center bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                        🌌 Neural Constellation Map
+                    </h2>
+                    <div id="thoughtMap" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 min-h-[250px]">
+                        <div class="text-center text-purple-300/60 col-span-full py-8">
+                            <div class="text-4xl mb-3">🌠</div>
+                            <p class="text-lg mb-2">Your neural constellation awaits...</p>
+                            <p class="text-sm">Each thought becomes a glowing node in your cognitive space</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reframe Engine -->
+            <div class="mb-6">
+                <div class="bg-black/20 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
+                    <h2 class="text-2xl font-bold mb-4 text-center bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+                        🔄 Quantum Thought Reprocessor
+                    </h2>
+                    <div class="space-y-4">
+                        <input type="text" id="reframeInput" placeholder="Input negative thought pattern for quantum reprocessing..." 
+                               class="w-full p-3 rounded-xl bg-black/30 border border-green-400/50 text-white placeholder-green-300/70 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent backdrop-blur-lg">
+                        <button onclick="reframeThought()" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 p-3 rounded-xl font-bold transition-all duration-300 transform hover:scale-105">
+                            ⚡ Initiate Quantum Reframe
+                        </button>
+                        <div id="reframeResult" class="hidden bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 backdrop-blur-lg border border-emerald-400/30 p-4 rounded-xl">
+                            <p class="font-bold text-emerald-400 mb-2">🌟 Quantum Reprocessed Output:</p>
+                            <p id="reframedText" class="text-white"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let thoughts = [];
+        let crystals = 0;
+        let reframeCount = 0;
+
+        // Add thought function
+        function addThought() {
+            const thoughtText = document.getElementById('thoughtInput').value;
+            const strength = document.getElementById('strengthSelect').value;
+
+            if (!thoughtText || !strength) {
+                alert('Please complete all neural input fields to launch your thought!');
+                return;
+            }
+
+            const thought = {
+                id: Date.now(),
+                text: thoughtText,
+                strength: strength,
+                frequency: 1,
+                timestamp: new Date().toLocaleDateString()
+            };
+
+            // Check if similar thought exists
+            const existing = thoughts.find(t => t.text.toLowerCase() === thoughtText.toLowerCase());
+            if (existing) {
+                existing.frequency++;
+            } else {
+                thoughts.push(thought);
+            }
+
+            updateThoughtMap();
+            clearInputs();
+            addCrystals(2);
+            updateThoughtCount();
+        }
+
+        // Update thought map display
+        function updateThoughtMap() {
+            const mapContainer = document.getElementById('thoughtMap');
+            
+            if (thoughts.length === 0) {
+                mapContainer.innerHTML = `
+                    <div class="text-center text-purple-300/60 col-span-full py-8">
+                        <div class="text-4xl mb-3">🌠</div>
+                        <p class="text-lg mb-2">Your neural constellation awaits...</p>
+                        <p class="text-sm">Each thought becomes a glowing node in your cognitive space</p>
+                    </div>
+                `;
+                return;
+            }
+
+            mapContainer.innerHTML = thoughts.map(thought => {
+                const strengthColor = {
+                    weak: 'from-gray-500/30 to-slate-600/30 border-gray-400/50',
+                    medium: 'from-yellow-500/30 to-orange-600/30 border-yellow-400/50',
+                    strong: 'from-red-500/30 to-pink-600/30 border-red-400/50'
+                }[thought.strength];
+
+                const strengthIcon = {
+                    weak: '🌙',
+                    medium: '⭐',
+                    strong: '☀️'
+                }[thought.strength];
+
+                return `
+                    <div class="thought-node bg-gradient-to-br ${strengthColor} backdrop-blur-lg p-4 rounded-xl border cursor-pointer transform transition-all duration-300">
+                        <div class="text-2xl mb-2 text-center">${strengthIcon}</div>
+                        <p class="font-bold text-white text-center mb-3 text-sm">${thought.text.substring(0, 50)}${thought.text.length > 50 ? '...' : ''}</p>
+                        <div class="text-xs text-center space-y-1">
+                            <div class="bg-black/30 px-2 py-1 rounded-full inline-block">
+                                Freq: ${thought.frequency}
+                            </div>
+                            <div class="bg-black/30 px-2 py-1 rounded-full inline-block ml-1">
+                                ${thought.timestamp}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Reframe thought
+        function reframeThought() {
+            const negativeThought = document.getElementById('reframeInput').value;
+            if (!negativeThought) {
+                alert('Please input a thought pattern for quantum reprocessing!');
+                return;
+            }
+
+            const reframes = [
+                "This challenge is an opportunity for neural pathway expansion and growth.",
+                "My cognitive systems are designed to adapt and overcome temporary obstacles.",
+                "I have successfully navigated similar neural challenges in my past processing cycles.",
+                "What guidance would I transmit to another consciousness facing this same pattern?",
+                "Multiple perspective algorithms exist - this is merely one computational viewpoint.",
+                "I can focus my processing power on variables within my control parameters.",
+                "This experience may upgrade my neural network with valuable new data.",
+                "My current cognitive output represents optimal function with available resources.",
+                "This temporary glitch does not define my overall system capabilities.",
+                "I am continuously learning and evolving through each processing cycle."
+            ];
+
+            const randomReframe = reframes[Math.floor(Math.random() * reframes.length)];
+            document.getElementById('reframedText').textContent = randomReframe;
+            document.getElementById('reframeResult').classList.remove('hidden');
+            document.getElementById('reframeInput').value = '';
+            addCrystals(3);
+            updateReframeCount();
+        }
+
+        // Helper functions
+        function addCrystals(amount) {
+            crystals += amount;
+            document.getElementById('crystals').textContent = crystals;
+        }
+
+        function updateThoughtCount() {
+            document.getElementById('thoughtCount').textContent = thoughts.length;
+        }
+
+        function updateReframeCount() {
+            reframeCount++;
+            document.getElementById('reframeCount').textContent = reframeCount;
+        }
+
+        function clearInputs() {
+            document.getElementById('thoughtInput').value = '';
+            document.getElementById('strengthSelect').value = '';
+        }
+
+        // Initialize
+        updateThoughtMap();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96d7701f5399b495',t:'MTc1NDkxMjIxNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

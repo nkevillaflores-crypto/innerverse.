@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emocean - Personal Mood Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Import custom font */
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+        
+        /* Base styles */
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #0F2027, #203A43, #2C5364);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        /* Glass effect for containers */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Background animation effects */
+        .ocean-ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(0);
+            animation: ripple 8s infinite;
+            z-index: -1;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(6);
+                opacity: 0;
+            }
+        }
+        
+        a:link {
+  color: white;
+  text-decoration: none;
+  font-family:'Quicksand', sans-serif;
+  text-shadow: linear-gradient(135deg, #0F2027, #203A43, #2C5364);
+  font-size:17px;
+  align-content:space-evenly;
+}
+
+a:visited {
+  color:white;
+  text-decoration: none;
+  font-family: 'Quicksand', sans-serif;
+  text-shadow: linear-gradient(135deg, #0F2027, #203A43, #2C5364);
+}
+
+a:hover {
+  color: white;
+  text-decoration: none;
+  font-family: 'Quicksand', sans-serif;
+  text-shadow: linear-gradient(135deg, #0F2027, #203A43, #2C5364);
+}
+
+a:active {
+  color: white;
+  text-decoration: none;
+  font-family: 'Quicksand', sans-serif;
+  text-shadow: linear-gradient(135deg, #0F2027, #203A43, #2C5364);
+}
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 5s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        /* Mood emoji styling */
+        .mood-emoji {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 2.5rem;
+            filter: grayscale(100%);
+            opacity: 0.7;
+        }
+        
+        .mood-emoji:hover, .mood-emoji.selected {
+            transform: scale(1.2);
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+        
+        /* History item styling */
+        .mood-history-item {
+            transition: all 0.3s ease;
+        }
+        
+        .mood-history-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        /* Button animation */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+        
+        /* Wave decoration */
+        .wave {
+            position: relative;
+            height: 70px;
+            width: 100%;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='rgba(255, 255, 255, 0.1)' fill-opacity='1' d='M0,128L48,144C96,160,192,192,288,186.7C384,181,480,139,576,138.7C672,139,768,181,864,181.3C960,181,1056,139,1152,122.7C1248,107,1344,117,1392,122.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+<body class="relative">
+    <!-- Background Effects -->
+    <div id="stars-container"></div>
+    <div class="ocean-ripple" style="top: 20%; left: 10%;"></div>
+    <div class="ocean-ripple" style="top: 60%; left: 80%; animation-delay: 2s;"></div>
+    <div class="ocean-ripple" style="top: 80%; left: 30%; animation-delay: 4s;"></div>
+    
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <div class="flex items-center">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center mr-4 relative overflow-hidden">
+                    <div class="absolute w-full h-4 bg-white opacity-20" style="top: 60%; transform: rotate(-15deg);"></div>
+                    <div class="absolute w-full h-3 bg-white opacity-10" style="top: 70%; transform: rotate(-5deg);"></div>
+                    <span class="text-3xl relative z-10">🌊</span>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold">Emocean</h1>
+                    <p class="text-blue-200">Personal Mood Tracker</p>
+                </div>
+            </div>
+            <div class="hidden md:block">
+                <p class="text-right text-blue-200" id="current-date"></p>
+                <p class="text-right text-sm text-blue-300">Track your emotional waves</p>
+                <a class="a:link" href="Nicole.html"><h1 class="text-xl font-bold"> Return to Homepage</h1></a>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Mood Entry Section -->
+            <div class="glass p-6">
+                <h2 class="text-2xl font-semibold mb-4">How are you feeling today?</h2>
+                <div class="flex justify-between mb-8">
+                    <div class="mood-emoji" data-mood="Happy">😊</div>
+                    <div class="mood-emoji" data-mood="Sad">😢</div>
+                    <div class="mood-emoji" data-mood="Angry">😡</div>
+                    <div class="mood-emoji" data-mood="Calm">😌</div>
+                    <div class="mood-emoji" data-mood="Anxious">😰</div>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block mb-2">What's on your mind? (optional)</label>
+                    <textarea id="mood-notes" class="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3" placeholder="Share your thoughts..."></textarea>
+                </div>
+                
+                <button id="save-mood" class="w-full py-3 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 font-medium transition-all pulse">
+                    Save Today's Mood
+                </button>
+            </div>
+            
+            <!-- Mood History Section -->
+            <div class="glass p-6">
+                <h2 class="text-2xl font-semibold mb-4">Your Recent Moods</h2>
+                <div id="mood-history" class="space-y-4">
+                    <div class="text-center text-blue-200 py-8">
+                        <p>No moods recorded yet</p>
+                        <p class="text-sm mt-2">Select a mood to get started</p>
+                    </div>
+                </div>
+                
+                <!-- Mood Pattern Visualization -->
+                <div class="mt-6">
+                    <h3 class="text-lg font-medium mb-2">Your Mood Pattern</h3>
+                    <div id="mood-pattern" class="flex items-center justify-center text-4xl h-16">
+                        <span class="text-blue-200 text-base">Record moods to see your pattern</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Support Message Section -->
+        <div id="support-message-container" class="glass p-6 mt-6 hidden">
+            <h2 class="text-2xl font-semibold mb-4">Your Support Message</h2>
+            <div id="support-message" class="text-center py-6 text-xl"></div>
+        </div>
+        
+        <!-- Tips Section -->
+        <div class="glass p-6 mt-6">
+            <h2 class="text-2xl font-semibold mb-4">Emocean Tips</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-gray-800 bg-opacity-50 p-4 rounded-lg">
+                    <div class="flex items-start">
+                        <div class="text-2xl mr-3">💧</div>
+                        <div>
+                            <h3 class="font-medium">Track Consistently</h3>
+                            <p class="text-sm text-blue-200 mt-1">Daily tracking helps you notice patterns in your emotional well-being.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-800 bg-opacity-50 p-4 rounded-lg">
+                    <div class="flex items-start">
+                        <div class="text-2xl mr-3">🌊</div>
+                        <div>
+                            <h3 class="font-medium">Ride the Waves</h3>
+                            <p class="text-sm text-blue-200 mt-1">Emotions come and go like waves - it's okay to feel them all.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-800 bg-opacity-50 p-4 rounded-lg">
+                    <div class="flex items-start">
+                        <div class="text-2xl mr-3">🧘</div>
+                        <div>
+                            <h3 class="font-medium">Breathe Deeply</h3>
+                            <p class="text-sm text-blue-200 mt-1">When emotions are intense, take 5 deep breaths to center yourself.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-800 bg-opacity-50 p-4 rounded-lg">
+                    <div class="flex items-start">
+                        <div class="text-2xl mr-3">📝</div>
+                        <div>
+                            <h3 class="font-medium">Note Your Thoughts</h3>
+                            <p class="text-sm text-blue-200 mt-1">Adding notes to your mood entries can help identify triggers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-blue-200 text-sm">
+            <p>Emocean - Your personal mood tracking companion</p>
+            <p class="mt-1">Made with 💙 for emotional well-being</p>
+        </footer>
+    </div>
+    
+    <div class="wave"></div>
+
+    <script>
+        // Create stars in the background
+        function createStars() {
+            const starsContainer = document.getElementById('stars-container');
+            const starCount = 100;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // Set current date
+        function setCurrentDate() {
+            const dateElement = document.getElementById('current-date');
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date();
+            dateElement.textContent = today.toLocaleDateString('en-US', options);
+        }
+        
+        // Mood selection functionality
+        function setupMoodSelection() {
+            const moodEmojis = document.querySelectorAll('.mood-emoji');
+            moodEmojis.forEach(emoji => {
+                emoji.addEventListener('click', () => {
+                    // Remove selected class from all emojis
+                    moodEmojis.forEach(e => e.classList.remove('selected'));
+                    // Add selected class to clicked emoji
+                    emoji.classList.add('selected');
+                });
+            });
+        }
+        
+        // Save mood functionality
+        function setupSaveMood() {
+            const saveButton = document.getElementById('save-mood');
+            saveButton.addEventListener('click', () => {
+                const selectedMood = document.querySelector('.mood-emoji.selected');
+                if (!selectedMood) {
+                    alert('Please select how you\'re feeling today.');
+                    return;
+                }
+                
+                const mood = selectedMood.getAttribute('data-mood');
+                const notes = document.getElementById('mood-notes').value;
+                const date = new Date();
+                
+                // Save mood to local storage
+                const moodEntry = {
+                    mood: mood,
+                    notes: notes,
+                    date: date.toISOString(),
+                    formattedDate: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                };
+                
+                let moodHistory = JSON.parse(localStorage.getItem('moodHistory')) || [];
+                
+                // Check if already logged today
+                const today = new Date().toLocaleDateString();
+                const alreadyLoggedToday = moodHistory.some(entry => {
+                    return new Date(entry.date).toLocaleDateString() === today;
+                });
+                
+                if (alreadyLoggedToday) {
+                    if (confirm('You\'ve already logged a mood today. Replace it?')) {
+                        // Remove today's entry
+                        moodHistory = moodHistory.filter(entry => {
+                            return new Date(entry.date).toLocaleDateString() !== today;
+                        });
+                    } else {
+                        return;
+                    }
+                }
+                
+                // Add new entry and keep only the last 5
+                moodHistory.unshift(moodEntry);
+                if (moodHistory.length > 5) {
+                    moodHistory = moodHistory.slice(0, 5);
+                }
+                
+                localStorage.setItem('moodHistory', JSON.stringify(moodHistory));
+                
+                // Update UI
+                updateMoodHistory();
+                updateMoodPattern();
+                showSupportMessage(mood);
+                
+                // Simulate successful submission
+                saveButton.textContent = 'Mood Saved!';
+                saveButton.classList.remove('pulse');
+                saveButton.classList.add('bg-green-600');
+                
+                // Reset after 2 seconds
+                setTimeout(() => {
+                    saveButton.textContent = 'Save Today\'s Mood';
+                    saveButton.classList.add('pulse');
+                    saveButton.classList.remove('bg-green-600');
+                    document.querySelector('.mood-emoji.selected').classList.remove('selected');
+                    document.getElementById('mood-notes').value = '';
+                }, 2000);
+            });
+        }
+        
+        // Update mood history display
+        function updateMoodHistory() {
+            const historyContainer = document.getElementById('mood-history');
+            const moodHistory = JSON.parse(localStorage.getItem('moodHistory')) || [];
+            
+            if (moodHistory.length === 0) {
+                historyContainer.innerHTML = `
+                    <div class="text-center text-blue-200 py-8">
+                        <p>No moods recorded yet</p>
+                        <p class="text-sm mt-2">Select a mood to get started</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            historyContainer.innerHTML = '';
+            
+            moodHistory.forEach(entry => {
+                const moodEmoji = getMoodEmoji(entry.mood);
+                const moodColor = getMoodColor(entry.mood);
+                
+                const entryElement = document.createElement('div');
+                entryElement.className = 'mood-history-item bg-gray-800 bg-opacity-50 p-4 rounded-lg';
+                entryElement.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="text-3xl mr-3">${moodEmoji}</div>
+                            <div>
+                                <h3 class="font-medium">${entry.mood}</h3>
+                                <p class="text-xs text-blue-200">${entry.formattedDate}</p>
+                            </div>
+                        </div>
+                        <div class="w-3 h-3 rounded-full" style="background: ${moodColor};"></div>
+                    </div>
+                    ${entry.notes ? `<p class="text-sm mt-2 text-blue-100">"${entry.notes}"</p>` : ''}
+                `;
+                
+                historyContainer.appendChild(entryElement);
+            });
+        }
+        
+        // Update mood pattern visualization
+        function updateMoodPattern() {
+            const patternContainer = document.getElementById('mood-pattern');
+            const moodHistory = JSON.parse(localStorage.getItem('moodHistory')) || [];
+            
+            if (moodHistory.length === 0) {
+                patternContainer.innerHTML = `<span class="text-blue-200 text-base">Record moods to see your pattern</span>`;
+                return;
+            }
+            
+            patternContainer.innerHTML = '';
+            
+            // Create pattern with emojis and waves
+            moodHistory.slice().reverse().forEach(entry => {
+                const moodEmoji = getMoodEmoji(entry.mood);
+                
+                const emojiSpan = document.createElement('span');
+                emojiSpan.textContent = moodEmoji;
+                emojiSpan.title = `${entry.mood} on ${entry.formattedDate}`;
+                patternContainer.appendChild(emojiSpan);
+                
+                // Add wave between emojis except after the last one
+                if (entry !== moodHistory[0]) {
+                    const waveSpan = document.createElement('span');
+                    waveSpan.textContent = '🌊';
+                    waveSpan.style.fontSize = '1.5rem';
+                    waveSpan.style.opacity = '0.7';
+                    patternContainer.appendChild(waveSpan);
+                }
+            });
+        }
+        
+        // Show support message based on mood
+        function showSupportMessage(mood) {
+            const messageContainer = document.getElementById('support-message-container');
+            const messageElement = document.getElementById('support-message');
+            
+            messageContainer.classList.remove('hidden');
+            
+            let message = '';
+            let emoji = '';
+            
+            switch(mood) {
+                case 'Happy':
+                    message = "Keep shining! Your positive energy ripples outward.";
+                    emoji = '🌟';
+                    break;
+                case 'Sad':
+                    message = "It's okay to feel this way. Be gentle with yourself.";
+                    emoji = '💙';
+                    break;
+                case 'Angry':
+                    message = "Your feelings are valid. Take a moment to breathe deeply.";
+                    emoji = '🧘';
+                    break;
+                case 'Calm':
+                    message = "Cherish this peaceful moment and carry it with you.";
+                    emoji = '✨';
+                    break;
+                case 'Anxious':
+                    message = "You're stronger than your worries. One step at a time.";
+                    emoji = '🌈';
+                    break;
+                default:
+                    message = "Thank you for sharing how you feel today.";
+                    emoji = '💭';
+            }
+            
+            messageElement.innerHTML = `${message} ${emoji}`;
+            
+            // Scroll to message
+            setTimeout(() => {
+                messageContainer.scrollIntoView({ behavior: 'smooth' });
+            }, 300);
+        }
+        
+        // Helper function to get emoji for mood
+        function getMoodEmoji(mood) {
+            switch(mood) {
+                case 'Happy': return '😊';
+                case 'Sad': return '😢';
+                case 'Angry': return '😡';
+                case 'Calm': return '😌';
+                case 'Anxious': return '😰';
+                default: return '😐';
+            }
+        }
+        
+        // Helper function to get color for mood
+        function getMoodColor(mood) {
+            switch(mood) {
+                case 'Happy': return '#4ade80'; // green
+                case 'Sad': return '#60a5fa'; // blue
+                case 'Angry': return '#f87171'; // red
+                case 'Calm': return '#a78bfa'; // purple
+                case 'Anxious': return '#fbbf24'; // yellow
+                default: return '#94a3b8'; // gray
+            }
+        }
+        
+        // Initialize everything when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            createStars();
+            setCurrentDate();
+            setupMoodSelection();
+            setupSaveMood();
+            updateMoodHistory();
+            updateMoodPattern();
+        });
+    </script>
+</body>
+</html>
+</body>
+</html>
