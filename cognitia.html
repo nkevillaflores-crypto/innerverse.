@@ -138,6 +138,7 @@
 
             <!-- Cognitive Pattern Map -->
             <div class="mb-6">
+                <input class="Thoughtstorage" type="text">
                 <div class="bg-black/20 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
                     <h2 class="text-2xl font-bold mb-4 text-center bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
                         🌌 Neural Constellation Map
@@ -257,6 +258,168 @@
             }).join('');
         }
 
+        //Localstorage
+        let Thoughts = [];
+        let Crystals = 0;
+        let reframedText = 0;
+
+        //Function to save all state to local storage
+        function saveState() {
+            localStorage.setItem('cognitiaThoughts', JSON.stringify(thoughts));
+            localStorage.setItem('cognitiaCrystals', crystals);
+            localStorage.setItem('cognitiaReframeCount', reframeCount);
+        }
+
+        //Function to load state from local storage
+        function loadState() {
+            const savedThoughts = localStorage.getItem('cognitiaThoughts')
+            const savedCrystals = localStorage.getItem('cognitiaCrystals');
+            const savedReframeCount = localStorage.getItem('cognitiaReframeCount');
+
+            if (savedThoughts) {
+                thoughts = JSON.parse(savedThoughts)
+            }
+            if (savedCrystals){
+                crystals = parseInt(savedCrystals, 10);
+            }
+        }
+
+                // Add thought function
+        function addThought() {
+            const thoughtText = document.getElementById('thoughtInput').value;
+            const strength = document.getElementById('strengthSelect').value;
+
+            if (!thoughtText || !strength) {
+                alert('Please complete all neural input fields to launch your thought!');
+                return;
+            }
+
+            const thought = {
+                id: Date.now(),
+                text: thoughtText,
+                strength: strength,
+                frequency: 1,
+                timestamp: new Date().toLocaleDateString()
+            };
+
+            // Check if similar thought exists
+            const existing = thoughts.find(t => t.text.toLowerCase() === thoughtText.toLowerCase());
+            if (existing) {
+                existing.frequency++;
+            } else {
+                thoughts.push(thought);
+            }
+
+            updateThoughtMap();
+            clearInputs();
+            addCrystals(2);
+            updateThoughtCount();
+            saveState(); // Save state after a thought is added
+        }
+
+        // Update thought map display
+        function updateThoughtMap() {
+            const mapContainer = document.getElementById('thoughtMap');
+            
+            if (thoughts.length === 0) {
+                mapContainer.innerHTML = `
+                    <div class="text-center text-purple-300/60 col-span-full py-8">
+                        <div class="text-4xl mb-3">🌠</div>
+                        <p class="text-lg mb-2">Your neural constellation awaits...</p>
+                        <p class="text-sm">Each thought becomes a glowing node in your cognitive space</p>
+                    </div>
+                `;
+                return;
+            }
+
+            mapContainer.innerHTML = thoughts.map(thought => {
+                const strengthColor = {
+                    weak: 'from-gray-500/30 to-slate-600/30 border-gray-400/50',
+                    medium: 'from-yellow-500/30 to-orange-600/30 border-yellow-400/50',
+                    strong: 'from-red-500/30 to-pink-600/30 border-red-400/50'
+                }[thought.strength];
+
+                const strengthIcon = {
+                    weak: '🌙',
+                    medium: '⭐',
+                    strong: '☀️'
+                }[thought.strength];
+
+                return `
+                    <div class="thought-node bg-gradient-to-br ${strengthColor} backdrop-blur-lg p-4 rounded-xl border cursor-pointer transform transition-all duration-300">
+                        <div class="text-2xl mb-2 text-center">${strengthIcon}</div>
+                        <p class="font-bold text-white text-center mb-3 text-sm">${thought.text.substring(0, 50)}${thought.text.length > 50 ? '...' : ''}</p>
+                        <div class="text-xs text-center space-y-1">
+                            <div class="bg-black/30 px-2 py-1 rounded-full inline-block">
+                                Freq: ${thought.frequency}
+                            </div>
+                            <div class="bg-black/30 px-2 py-1 rounded-full inline-block ml-1">
+                                ${thought.timestamp}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Reframe thought
+        function reframeThought() {
+            const negativeThought = document.getElementById('reframeInput').value;
+            if (!negativeThought) {
+                alert('Please input a thought pattern for quantum reprocessing!');
+                return;
+            }
+
+            const reframes = [
+                "This challenge is an opportunity for neural pathway expansion and growth.",
+                "My cognitive systems are designed to adapt and overcome temporary obstacles.",
+                "I have successfully navigated similar neural challenges in my past processing cycles.",
+                "What guidance would I transmit to another consciousness facing this same pattern?",
+                "Multiple perspective algorithms exist - this is merely one computational viewpoint.",
+                "I can focus my processing power on variables within my control parameters.",
+                "This experience may upgrade my neural network with valuable new data.",
+                "My current cognitive output represents optimal function with available resources.",
+                "This temporary glitch does not define my overall system capabilities.",
+                "I am continuously learning and evolving through each processing cycle."
+            ];
+
+            const randomReframe = reframes[Math.floor(Math.random() * reframes.length)];
+            document.getElementById('reframedText').textContent = randomReframe;
+            document.getElementById('reframeResult').classList.remove('hidden');
+            document.getElementById('reframeInput').value = '';
+            addCrystals(3);
+            updateReframeCount();
+            saveState(); // Save state after a reframe is created
+        }
+
+        // Helper functions
+        function addCrystals(amount) {
+            crystals += amount;
+            document.getElementById('crystals').textContent = crystals;
+        }
+
+        function updateThoughtCount() {
+            document.getElementById('thoughtCount').textContent = thoughts.length;
+        }
+
+        function updateReframeCount() {
+            reframeCount++;
+            document.getElementById('reframeCount').textContent = reframeCount;
+        }
+
+        function clearInputs() {
+            document.getElementById('thoughtInput').value = '';
+            document.getElementById('strengthSelect').value = '';
+        }
+
+        // Initialize: Load state on page load and then update the UI
+        loadState();
+        updateThoughtMap();
+        document.getElementById('crystals').textContent = crystals;
+        document.getElementById('thoughtCount').textContent = thoughts.length;
+        document.getElementById('reframeCount').textContent = reframeCount;
+
+
         // Reframe thought
         function reframeThought() {
             const negativeThought = document.getElementById('reframeInput').value;
@@ -311,4 +474,3 @@
     </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96d7701f5399b495',t:'MTc1NDkxMjIxNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
-
