@@ -7,7 +7,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Exo+2:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        
+        /*login*/
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /*Main Interface*/
         :root {
             --deep-space: #0a0a12;
             --cosmic-red: #e63946;
@@ -97,19 +103,6 @@
             transform: scale(1.1);
         }
 
-        .login{
-             display: flex;
-             flex-direction: row;
-             justify-content: flex-end;
-             align-items: center;
-             padding: -90px 30px;
-             width: 100%;
-        }
-
-        .login-button{
-            margin-left: auto;
-        }
-        
         .planet-icon {
             border-radius: 50%;
             display: flex;
@@ -238,56 +231,143 @@
     </style>
 </head>
 <body>
-    <!-- Starfield Background -->
-    <div class="starfield" id="starfield"></div>
-    
-    <div class="container mx-auto px-4 py-8 max-w-4xl">
-        <!-- Login Button -->
-        <div class="login">
-            <button type="button" class="cosmic-button px-6 py-2 rounded-lg">
-                <a href="login.html/Login interface.html"> Log In
-            </button></a>
-        </div>
-        
-        <!-- Header -->
-        <div class="text-center mb-2">
-            <h1 class="orbitron text-6xl font-bold text-white mb-8" style="text-shadow: 0 0 30px rgba(255, 255, 255, 0.6), 0 0 60px rgba(255, 255, 255, 0.3);">InnerVerse</h1>
-            <p class="text-gray-100 text-2xl mb-4 font-light" style="text-shadow: 0 0 20px rgba(255, 255, 255, 0.4), 0 0 40px rgba(255, 255, 255, 0.2);">Welcome To Your InnerVerse</p>
-            <p class="text-gray-300 text-lg max-w-3xl mx-auto leading-relaxed mb-4" style="text-shadow: 0 0 15px rgba(255, 255, 255, 0.3), 0 0 30px rgba(255, 255, 255, 0.1);">Explore the cosmos of your mind through interactive planets. Each represents a different aspect of your inner world. Click on a planet to begin your journey of self-discovery.</p>
-        </div>
-        
-        <!-- Main Interface -->
-        <div class="flex justify-center items-end space-x-32 py-2">
-            <div class="planet float" data-category="Cognitia">
-                <div class="tooltip">Cognitia - Realm of Thoughts</div>
-                <div class="planet-icon w-48 h-48 mx-auto bg-gradient-to-br from-purple-600 to-purple-900">
-                    <a href="cognitia.html"><span class="text-8xl">🧠</span></a>
-                </div>
-                <p class="text-center mt-6 orbitron text-2xl">Cognitia</p>
-            </div>
-            
-            <div class="planet float" data-category="Emocean" style="margin-top: 80px;">
-                <div class="tooltip">Emocean - Ocean of Emotions</div>
-                <div class="planet-icon w-56 h-56 mx-auto bg-gradient-to-br from-blue-600 to-blue-900">
-                    <a href="emocean.html"><span class="text-9xl">🌊</span></a>
-                </div>
-                <p class="text-center mt-6 orbitron text-2xl">Emocean</p>
-            </div>
-            
-            <div class="planet float" data-category="Valea">
-                <div class="tooltip">Valea - Valley of Values</div>
-                <div class="planet-icon w-48 h-48 mx-auto bg-gradient-to-br from-yellow-500 to-yellow-700">
-                   <a href="valea.html"><span class="text-8xl">⭐</span></a>
-                </div>
-                <p class="text-center mt-6 orbitron text-2xl">Valea</p>
-            </div>
-        </div>
-        
 
+    <div id="login-container" class="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center p-4">
+        <div class="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 w-full max-w-md border border-white/20">
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-semibold text-white mb-2">Innerverse</h1>
+                <p class="text-purple-200">Welcome back to your inner world</p>
+            </div>
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-purple-200 mb-2">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required
+                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200"
+                        placeholder="Enter your email"
+                    >
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-purple-200 mb-2">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required
+                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200"
+                        placeholder="Enter your password"
+                    >
+                </div>
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="w-4 h-4 text-purple-400 bg-white/10 border-white/20 rounded focus:ring-purple-400 focus:ring-2">
+                        <span class="ml-2 text-sm text-purple-200">Remember me</span>
+                    </label>
+                    <a href="#" class="text-sm text-purple-300 hover:text-purple-100 transition-colors duration-200">Forgot password?</a>
+                </div>
+                <button 
+                    type="submit"
+                    class="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-transparent"
+                >
+                    Sign In to Innerverse
+                </button>
+            </form>
+            <div class="mt-8 text-center">
+                <p class="text-purple-200 text-sm">
+                    Don't have an account? 
+                    <a href="#" class="text-purple-300 hover:text-purple-100 font-medium transition-colors duration-200">Create one</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div id="main-interface-container" style="display: none;">
+        <div class="starfield" id="starfield"></div>
+        <div class="container mx-auto px-4 py-8 max-w-4xl">        
+            <div class="text-center mb-2">
+                <h1 class="orbitron text-6xl font-bold text-white mb-8" style="text-shadow: 0 0 30px rgba(255, 255, 255, 0.6), 0 0 60px rgba(255, 255, 255, 0.3);">InnerVerse</h1>
+                <p class="text-gray-100 text-2xl mb-4 font-light" style="text-shadow: 0 0 20px rgba(255, 255, 255, 0.4), 0 0 40px rgba(255, 255, 255, 0.2);">Welcome To Your InnerVerse</p>
+                <p class="text-gray-300 text-lg max-w-3xl mx-auto leading-relaxed mb-4" style="text-shadow: 0 0 15px rgba(255, 255, 255, 0.3), 0 0 30px rgba(255, 255, 255, 0.1);">Explore the cosmos of your mind through interactive planets. Each represents a different aspect of your inner world. Click on a planet to begin your journey of self-discovery.</p>
+            </div>
+            <div class="flex justify-center items-end space-x-32 py-2">
+                <div class="planet float" data-category="Cognitia">
+                    <div class="tooltip">Cognitia - Realm of Thoughts</div>
+                    <div class="planet-icon w-48 h-48 mx-auto bg-gradient-to-br from-purple-600 to-purple-900">
+                        <a href="cognitia.html"><span class="text-8xl">🧠</span></a>
+                    </div>
+                    <p class="text-center mt-6 orbitron text-2xl">Cognitia</p>
+                </div>
+                <div class="planet float" data-category="Emocean" style="margin-top: 80px;">
+                    <div class="tooltip">Emocean - Ocean of Emotions</div>
+                    <div class="planet-icon w-56 h-56 mx-auto bg-gradient-to-br from-blue-600 to-blue-900">
+                        <a href="emocean.html"><span class="text-9xl">🌊</span></a>
+                    </div>
+                    <p class="text-center mt-6 orbitron text-2xl">Emocean</p>
+                </div>
+                <div class="planet float" data-category="Valea">
+                    <div class="tooltip">Valea - Valley of Values</div>
+                    <div class="planet-icon w-48 h-48 mx-auto bg-gradient-to-br from-yellow-500 to-yellow-700">
+                       <a href="valea.html"><span class="text-8xl">⭐</span></a>
+                    </div>
+                    <p class="text-center mt-6 orbitron text-2xl">Valea</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // DOM elements
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const submitButton = e.target.querySelector('button[type="submit"]');
+            
+            if (!email || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            submitButton.innerHTML = 'Signing in...';
+            submitButton.disabled = true;
+            
+            // Simulate login process
+            setTimeout(() => {
+                const loginContainer = document.getElementById('login-container');
+                const mainInterfaceContainer = document.getElementById('main-interface-container');
+                
+                // Hide login form and show homepage
+                loginContainer.style.display = 'none';
+                mainInterfaceContainer.style.display = 'block';
+
+                alert('Login successful! Welcome to your Innerverse.');
+                
+                // Re-enable button (optional, as it's now hidden)
+                submitButton.innerHTML = 'Sign In to Innerverse';
+                submitButton.disabled = false;
+            }, 1500);
+        });
+
+        const inputs = document.querySelectorAll('input[type="email"], input[type="password"]');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('transform', 'scale-105');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('transform', 'scale-105');
+            });
+        });
+
+        // DOM elements for main interface
         const elements = {
             starfield: document.getElementById("starfield"),
             realmCards: document.querySelectorAll(".realm-card")
@@ -300,15 +380,9 @@
             for (let i = 0; i < stars; i++) {
                 const star = document.createElement('div');
                 star.className = 'star';
-                
-                // Random position
                 const x = Math.random() * 100;
                 const y = Math.random() * 100;
-                
-                // Random size
                 const size = Math.random() * 3;
-                
-                // Random opacity
                 const opacity = Math.random() * 0.8 + 0.2;
                 
                 star.style.left = `${x}%`;
@@ -316,15 +390,12 @@
                 star.style.width = `${size}px`;
                 star.style.height = `${size}px`;
                 star.style.opacity = opacity;
-                
-                // Add subtle animation
                 star.style.animation = `twinkle ${Math.random() * 5 + 3}s infinite ease-in-out`;
                 
                 elements.starfield.appendChild(star);
             }
         }
 
-        // Add twinkle animation
         const style = document.createElement('style');
         style.textContent = `
             @keyframes twinkle {
@@ -334,15 +405,12 @@
         `;
         document.head.appendChild(style);
 
-        // Initialize the application
         function init() {
             createStarfield();
             attachEventListeners();
         }
 
-        // Attach event listeners
         function attachEventListeners() {
-            // Realm card clicks
             elements.realmCards.forEach(card => {
                 card.addEventListener("click", () => {
                     const realmName = card.querySelector('h2').textContent;
@@ -350,8 +418,6 @@
                 });
             });
         }
-
-        // Initialize the application
         document.addEventListener("DOMContentLoaded", init);
     </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96e0196621a82652',t:'MTc1NTAwMzAzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
